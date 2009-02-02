@@ -63,6 +63,8 @@ that make use of CUDA.
 bash %SOURCE0 --tar xf -C %{buildroot}%{_usr}
 %else
 bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
+%__mv %{buildroot}/usr/lib %{buildroot}/usr/lib64
+%__sed -ie 's/lib/lib64/g' %{buildroot}/bin/nvcc.profile
 %endif
 
 %__mv %{buildroot}%{_usr}/doc ./
