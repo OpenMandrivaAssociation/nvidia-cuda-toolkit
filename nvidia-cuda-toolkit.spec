@@ -14,7 +14,6 @@ Group:		System/Libraries
 Url:		http://www.nvidia.com/cuda
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Requires:	nvidia >= 177.70
-BuildRequires:	nvidia-devel >= 177.70
 
 %description
 NVIDIA(R)CUDA(TM) is a general purpose parallel computing architecture
@@ -64,7 +63,7 @@ bash %SOURCE0 --tar xf -C %{buildroot}%{_usr}
 %else
 bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 %__mv %{buildroot}/usr/lib %{buildroot}/usr/lib64
-%__sed -ie 's/lib/lib64/g' %{buildroot}/bin/nvcc.profile
+%__sed -ie 's/lib/lib64/g' %{buildroot}%{_bindir}/nvcc.profile
 %endif
 
 %__mv %{buildroot}%{_usr}/doc ./
