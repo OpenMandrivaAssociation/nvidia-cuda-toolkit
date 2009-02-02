@@ -1,6 +1,6 @@
 %define name	nvidia-cuda-toolkit
 %define version 2.0
-%define release %mkrel 1
+%define release %mkrel 2
 
 Summary:	NVIDIA CUDA Toolkit libraries
 Name:		%{name}
