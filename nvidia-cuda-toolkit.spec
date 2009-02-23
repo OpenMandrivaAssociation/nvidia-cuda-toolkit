@@ -1,6 +1,6 @@
 %define name	nvidia-cuda-toolkit
 %define version 2.0
-%define release %mkrel 2
+%define release %mkrel 3
 
 Summary:	NVIDIA CUDA Toolkit libraries
 Name:		%{name}
@@ -58,6 +58,7 @@ that make use of CUDA.
 %__rm -rf %{buildroot}
 
 %__install -d -m 755 %{buildroot}%{_usr}
+
 %ifarch %ix86
 bash %SOURCE0 --tar xf -C %{buildroot}%{_usr}
 %else
@@ -74,6 +75,10 @@ bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 
 %clean
 %__rm -rf %{buildroot}
+
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
 
 %files
 %_libdir/*.so.*
