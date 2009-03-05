@@ -1,19 +1,19 @@
 %define name	nvidia-cuda-toolkit
-%define version 2.0
-%define release %mkrel 4
+%define version 2.1
+%define release %mkrel 1
 
 Summary:	NVIDIA CUDA Toolkit libraries
 Name:		%{name}
 Version:	%{version}
 Release:	%{release}
-Source0:	NVIDIA_CUDA_Toolkit_2.0_rhel5.1_x86.run
-Source1:	NVIDIA_CUDA_Toolkit_2.0_rhel5.1_x86_64.run
+Source0:	cudatoolkit_2.1_linux32_rhel5.2.run
+Source1:	cudatoolkit_2.1_linux64_rhel5.2.run
 Source2:	nvidia
 License:	Freeware
 Group:		System/Libraries
 Url:		http://www.nvidia.com/cuda
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
-Suggests:	nvidia >= 177.70
+Suggests:	nvidia >= 180.22
 
 %description
 NVIDIA(R)CUDA(TM) is a general purpose parallel computing architecture
@@ -34,7 +34,7 @@ programs that make use of CUDA.
 Summary:	NVIDIA CUDA Toolkit development files
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
-Suggests:	nvidia-devel >= 177.70
+Suggests:	nvidia-devel >= 180.22
 
 %description devel
 NVIDIA(R)CUDA(TM) is a general purpose parallel computing architecture
