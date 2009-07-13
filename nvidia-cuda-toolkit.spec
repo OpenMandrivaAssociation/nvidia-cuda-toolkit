@@ -18,7 +18,7 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Suggests:	nvidia >= %{driver_ver}
 
 %description
-NVIDIA(R)CUDA(TM) is a general purpose parallel computing architecture
+NVIDIA(R) CUDA(TM) is a general purpose parallel computing architecture
 that leverages the parallel compute engine in NVIDIA graphics
 processing units (GPUs) to solve many complex computational problems
 in a fraction of the time required on a CPU. It includes the CUDA
@@ -39,7 +39,7 @@ Requires:	%{name} = %{version}-%{release}
 Suggests:	nvidia-devel >= %{driver_ver}
 
 %description devel
-NVIDIA(R)CUDA(TM) is a general purpose parallel computing architecture
+NVIDIA(R) CUDA(TM) is a general purpose parallel computing architecture
 that leverages the parallel compute engine in NVIDIA graphics
 processing units (GPUs) to solve many complex computational problems
 in a fraction of the time required on a CPU. It includes the CUDA
@@ -61,7 +61,7 @@ Requires:	%{name} = %{version}-%{release}
 Suggests:	nvidia-devel >= %{driver_ver}
 
 %description -n nvidia-cuda-profiler
-NVIDIA(R)CUDA(TM) is a general purpose parallel computing architecture
+NVIDIA(R) CUDA(TM) is a general purpose parallel computing architecture
 that leverages the parallel compute engine in NVIDIA graphics
 processing units (GPUs) to solve many complex computational problems
 in a fraction of the time required on a CPU. It includes the CUDA
@@ -88,7 +88,7 @@ bash %SOURCE0 --tar xf -C %{buildroot}%{_usr}
 %else
 bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 %__mv %{buildroot}/usr/lib %{buildroot}/usr/lib64
-%__sed -ie 's/lib/lib64/g' %{buildroot}%{_bindir}/nvcc.profile
+%__sed -i 's/lib/lib64/g' %{buildroot}%{_bindir}/nvcc.profile
 %endif
 
 %__mv %{buildroot}%{_usr}/doc ./
