@@ -54,7 +54,6 @@ FORTRAN and C++.
 This package contains the development files needed to build programs
 that make use of CUDA.
 
-%ifarch i586
 %package -n nvidia-cuda-profiler
 Summary:	NVIDIA CUDA Visual Profiler
 Group:		Development/Other
@@ -74,7 +73,6 @@ processor. Other languages will be supported in the future, including
 FORTRAN and C++.
 
 This package contains the CUDA Visual Profiler.
-%endif
 
 %prep
 %setup -q -T -c %{name}-%{version}
@@ -88,7 +86,7 @@ This package contains the CUDA Visual Profiler.
 bash %SOURCE0 --tar xf -C %{buildroot}%{_usr}
 %else
 bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
-%__mv %{buildroot}/usr/lib %{buildroot}/usr/lib64
+%__rm -rf %{buildroot}/usr/lib 
 %__sed -i 's/lib/lib64/g' %{buildroot}%{_bindir}/nvcc.profile
 %endif
 
@@ -96,13 +94,11 @@ bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 %__install -d -m 755 %{buildroot}%{_datadir}
 %__mv %{buildroot}%{_usr}/man %{buildroot}%{_mandir}
 
-%ifarch i586
 %__mv %{buildroot}%{_usr}/cudaprof/bin/cudaprof %{buildroot}%{_bindir}/
 %__mkdir cudaprofdoc
 %__mv %{buildroot}%{_usr}/cudaprof/*.txt cudaprofdoc/
 %__mv %{buildroot}%{_usr}/cudaprof/doc/* cudaprofdoc/
 %__mv %{buildroot}%{_usr}/cudaprof/projects cudaprofdoc/
-%endif
 %__rm -rf %{buildroot}%{_usr}/cudaprof
 
 %__install -D -m 755 %SOURCE2 %{buildroot}%{_sysconfdir}/init.d/nvidia
@@ -131,9 +127,7 @@ bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 %exclude %_usr/src
 %exclude %_usr/install-linux.pl
 
-%ifarch i586
 %files -n nvidia-cuda-profiler
 %defattr(-,root,root)
 %doc cudaprofdoc/*
 %_bindir/cudaprof
-%endif
