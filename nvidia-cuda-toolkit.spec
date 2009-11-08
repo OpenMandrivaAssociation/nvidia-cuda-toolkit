@@ -1,15 +1,15 @@
 %define name	nvidia-cuda-toolkit
-%define version 2.2
-%define release %mkrel 2
+%define version 2.3
+%define release %mkrel 1
 
-%define driver_ver 185.18.14
+%define driver_ver 190.18
 
 Summary:	NVIDIA CUDA Toolkit libraries
 Name:		%{name}
 Version:	%{version}
 Release:	%{release}
-Source0:	cudatoolkit_2.2_linux_32_rhel5.3.run
-Source1:	cudatoolkit_2.2_linux_64_rhel5.3.run
+Source0:	cudatoolkit_%{version}_linux_32_rhel5.3.run
+Source1:	cudatoolkit_%{version}_linux_64_rhel5.3.run
 Source2:	nvidia
 License:	Freeware
 Group:		System/Libraries
@@ -36,6 +36,7 @@ programs that make use of CUDA.
 Summary:	NVIDIA CUDA Toolkit development files
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
+Requires:	libqassistant4
 Suggests:	nvidia-devel >= %{driver_ver}
 
 %description devel
