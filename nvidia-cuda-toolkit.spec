@@ -1,6 +1,6 @@
 %define name	nvidia-cuda-toolkit
 %define version 2.3
-%define release %mkrel 1
+%define release %mkrel 2
 
 %define driver_ver 190.18
 
@@ -36,7 +36,6 @@ programs that make use of CUDA.
 Summary:	NVIDIA CUDA Toolkit development files
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
-Requires:	libqassistant4
 Suggests:	nvidia-devel >= %{driver_ver}
 
 %description devel
@@ -59,6 +58,7 @@ Summary:	NVIDIA CUDA Visual Profiler
 Group:		Development/Other
 Requires:	%{name} = %{version}-%{release}
 Suggests:	nvidia-devel >= %{driver_ver}
+Suggests:	qt4-assistant
 
 %description -n nvidia-cuda-profiler
 NVIDIA(R) CUDA(TM) is a general purpose parallel computing architecture
@@ -120,6 +120,7 @@ bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 %defattr(-,root,root)
 %doc doc/*
 %_bindir/*
+%exclude %_bindir/cudaprof
 %_libdir/*.so
 %_includedir/*
 %_mandir/*
