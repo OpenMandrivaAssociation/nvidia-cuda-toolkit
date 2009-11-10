@@ -1,6 +1,6 @@
 %define name	nvidia-cuda-toolkit
 %define version 2.3
-%define release %mkrel 2
+%define release %mkrel 3
 
 %define driver_ver 190.18
 
@@ -37,6 +37,7 @@ Summary:	NVIDIA CUDA Toolkit development files
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
 Suggests:	nvidia-devel >= %{driver_ver}
+%define _requires_exceptions libcuda.so.1
 
 %description devel
 NVIDIA(R) CUDA(TM) is a general purpose parallel computing architecture
