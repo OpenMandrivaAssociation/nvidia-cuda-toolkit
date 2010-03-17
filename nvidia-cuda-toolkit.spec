@@ -1,6 +1,6 @@
 %define name	nvidia-cuda-toolkit
 %define version 2.3
-%define release %mkrel 3
+%define release %mkrel 4
 
 %define driver_ver 190.18
 
