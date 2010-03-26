@@ -1,8 +1,8 @@
 %define name	nvidia-cuda-toolkit
-%define version 2.3
-%define release %mkrel 4
+%define version 3.0
+%define release %mkrel 1
 
-%define driver_ver 190.18
+%define driver_ver 195.0
 
 Summary:	NVIDIA CUDA Toolkit libraries
 Name:		%{name}
@@ -75,6 +75,27 @@ FORTRAN and C++.
 
 This package contains the CUDA Visual Profiler.
 
+%package -n nvidia-opencl-profiler
+Summary:	NVIDIA OpenCL Visual Profiler
+Group:		Development/Other
+Requires:	%{name} = %{version}-%{release}
+Suggests:	nvidia-devel >= %{driver_ver}
+Suggests:	qt4-assistant
+
+%description -n nvidia-opencl-profiler
+NVIDIA(R) CUDA(TM) is a general purpose parallel computing architecture
+that leverages the parallel compute engine in NVIDIA graphics
+processing units (GPUs) to solve many complex computational problems
+in a fraction of the time required on a CPU. It includes the CUDA
+Instruction Set Architecture (ISA) and the parallel compute engine in
+the GPU. To program to the CUDATM architecture, developers can, today,
+use C, one of the most widely used high-level programming languages,
+which can then be run at great performance on a CUDATM enabled
+processor. Other languages will be supported in the future, including
+FORTRAN and C++.
+
+This package contains the OpenCL Visual Profiler.
+
 %prep
 %setup -q -T -c %{name}-%{version}
 
@@ -101,6 +122,13 @@ bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 %__mv %{buildroot}%{_usr}/cudaprof/doc/* cudaprofdoc/
 %__mv %{buildroot}%{_usr}/cudaprof/projects cudaprofdoc/
 %__rm -rf %{buildroot}%{_usr}/cudaprof
+
+%__mv %{buildroot}%{_usr}/openclprof/bin/openclprof %{buildroot}%{_bindir}/
+%__mkdir openclprofdoc
+%__mv %{buildroot}%{_usr}/openclprof/*.txt openclprofdoc/
+%__mv %{buildroot}%{_usr}/openclprof/doc/* openclprofdoc/
+%__mv %{buildroot}%{_usr}/openclprof/projects openclprofdoc/
+%__rm -rf %{buildroot}%{_usr}/openclprof
 
 %__install -D -m 755 %SOURCE2 %{buildroot}%{_sysconfdir}/init.d/nvidia
 
@@ -133,3 +161,8 @@ bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 %defattr(-,root,root)
 %doc cudaprofdoc/*
 %_bindir/cudaprof
+
+%files -n nvidia-opencl-profiler
+%defattr(-,root,root)
+%doc openclprofdoc/*
+%_bindir/openclprof
