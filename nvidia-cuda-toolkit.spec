@@ -1,16 +1,17 @@
 %define name	nvidia-cuda-toolkit
-%define version 3.0
+%define version 3.1
 %define release %mkrel 1
 
-%define driver_ver 195.0
+%define driver_ver 256.35
 
 Summary:	NVIDIA CUDA Toolkit libraries
 Name:		%{name}
 Version:	%{version}
 Release:	%{release}
-Source0:	cudatoolkit_%{version}_linux_32_rhel5.3.run
-Source1:	cudatoolkit_%{version}_linux_64_rhel5.3.run
+Source0:	cudatoolkit_%{version}_linux_32_rhel5.4.run
+Source1:	cudatoolkit_%{version}_linux_64_rhel5.4.run
 Source2:	nvidia
+Source3:	cuda_gdb_fixed.tar.gz
 License:	Freeware
 Group:		System/Libraries
 Url:		http://www.nvidia.com/cuda
@@ -54,14 +55,15 @@ FORTRAN and C++.
 This package contains the development files needed to build programs
 that make use of CUDA.
 
-%package -n nvidia-cuda-profiler
-Summary:	NVIDIA CUDA Visual Profiler
+%package -n nvidia-compute-profiler
+Summary:	NVIDIA Compute Visual Profiler
 Group:		Development/Other
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	nvidia-cuda-profiler, nvidia-opencl-profiler
 Suggests:	nvidia-devel >= %{driver_ver}
 Suggests:	qt4-assistant
 
-%description -n nvidia-cuda-profiler
+%description -n nvidia-compute-profiler
 NVIDIA(R) CUDA(TM) is a general purpose parallel computing architecture
 that leverages the parallel compute engine in NVIDIA graphics
 processing units (GPUs) to solve many complex computational problems
@@ -73,28 +75,7 @@ which can then be run at great performance on a CUDATM enabled
 processor. Other languages will be supported in the future, including
 FORTRAN and C++.
 
-This package contains the CUDA Visual Profiler.
-
-%package -n nvidia-opencl-profiler
-Summary:	NVIDIA OpenCL Visual Profiler
-Group:		Development/Other
-Requires:	%{name} = %{version}-%{release}
-Suggests:	nvidia-devel >= %{driver_ver}
-Suggests:	qt4-assistant
-
-%description -n nvidia-opencl-profiler
-NVIDIA(R) CUDA(TM) is a general purpose parallel computing architecture
-that leverages the parallel compute engine in NVIDIA graphics
-processing units (GPUs) to solve many complex computational problems
-in a fraction of the time required on a CPU. It includes the CUDA
-Instruction Set Architecture (ISA) and the parallel compute engine in
-the GPU. To program to the CUDATM architecture, developers can, today,
-use C, one of the most widely used high-level programming languages,
-which can then be run at great performance on a CUDATM enabled
-processor. Other languages will be supported in the future, including
-FORTRAN and C++.
-
-This package contains the OpenCL Visual Profiler.
+This package contains the Compute Visual Profiler for CUDA and OpenCL.
 
 %prep
 %setup -q -T -c %{name}-%{version}
@@ -103,11 +84,17 @@ This package contains the OpenCL Visual Profiler.
 %__rm -rf %{buildroot}
 
 %__install -d -m 755 %{buildroot}%{_usr}
+tar zxf %SOURCE3
 
+# Replace the cuda-gdb file in the toolkit with one that has
+# been modified to dynamically link against libraries available in Mandriva
+# 2010.1:
 %ifarch %ix86
 bash %SOURCE0 --tar xf -C %{buildroot}%{_usr}
+%__install -m 755 cuda-gdb.32 %{buildroot}%{_bindir}/cuda-gdb
 %else
 bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
+%__install -m 755 cuda-gdb.64 %{buildroot}%{_bindir}/cuda-gdb
 %__rm -rf %{buildroot}/usr/lib 
 %__sed -i 's/lib/lib64/g' %{buildroot}%{_bindir}/nvcc.profile
 %endif
@@ -116,19 +103,12 @@ bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 %__install -d -m 755 %{buildroot}%{_datadir}
 %__mv %{buildroot}%{_usr}/man %{buildroot}%{_mandir}
 
-%__mv %{buildroot}%{_usr}/cudaprof/bin/cudaprof %{buildroot}%{_bindir}/
-%__mkdir cudaprofdoc
-%__mv %{buildroot}%{_usr}/cudaprof/*.txt cudaprofdoc/
-%__mv %{buildroot}%{_usr}/cudaprof/doc/* cudaprofdoc/
-%__mv %{buildroot}%{_usr}/cudaprof/projects cudaprofdoc/
-%__rm -rf %{buildroot}%{_usr}/cudaprof
-
-%__mv %{buildroot}%{_usr}/openclprof/bin/openclprof %{buildroot}%{_bindir}/
-%__mkdir openclprofdoc
-%__mv %{buildroot}%{_usr}/openclprof/*.txt openclprofdoc/
-%__mv %{buildroot}%{_usr}/openclprof/doc/* openclprofdoc/
-%__mv %{buildroot}%{_usr}/openclprof/projects openclprofdoc/
-%__rm -rf %{buildroot}%{_usr}/openclprof
+%__mv %{buildroot}%{_usr}/computeprof/bin/computeprof %{buildroot}%{_bindir}/
+%__mkdir computeprofdoc
+%__mv %{buildroot}%{_usr}/computeprof/*.txt computeprofdoc/
+%__mv %{buildroot}%{_usr}/computeprof/doc/* computeprofdoc/
+%__mv %{buildroot}%{_usr}/computeprof/projects computeprofdoc/
+%__rm -rf %{buildroot}%{_usr}/computeprof
 
 %__install -D -m 755 %SOURCE2 %{buildroot}%{_sysconfdir}/init.d/nvidia
 
@@ -149,7 +129,7 @@ bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 %defattr(-,root,root)
 %doc doc/*
 %_bindir/*
-%exclude %_bindir/cudaprof
+%exclude %_bindir/computeprof
 %_libdir/*.so
 %_includedir/*
 %_mandir/*
@@ -157,12 +137,8 @@ bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 %exclude %_usr/src
 %exclude %_usr/install-linux.pl
 
-%files -n nvidia-cuda-profiler
+%files -n nvidia-compute-profiler
 %defattr(-,root,root)
-%doc cudaprofdoc/*
-%_bindir/cudaprof
+%doc computeprofdoc/*
+%_bindir/computeprof
 
-%files -n nvidia-opencl-profiler
-%defattr(-,root,root)
-%doc openclprofdoc/*
-%_bindir/openclprof
