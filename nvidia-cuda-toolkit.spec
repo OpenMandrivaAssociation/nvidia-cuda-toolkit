@@ -1,22 +1,23 @@
 %define name	nvidia-cuda-toolkit
-%define version 3.1
+%define version 3.2.16
 %define release %mkrel 1
 
-%define driver_ver 256.35
+%define driver_ver 260.19.21
 
 Summary:	NVIDIA CUDA Toolkit libraries
 Name:		%{name}
 Version:	%{version}
 Release:	%{release}
-Source0:	cudatoolkit_%{version}_linux_32_rhel5.4.run
-Source1:	cudatoolkit_%{version}_linux_64_rhel5.4.run
+Source0:	cudatoolkit_%{version}_linux_32_ubuntu10.04.run
+Source1:	cudatoolkit_%{version}_linux_64_ubuntu10.04.run
 Source2:	nvidia
-Source3:	cuda_gdb_fixed.tar.gz
 License:	Freeware
 Group:		System/Libraries
-Url:		http://www.nvidia.com/cuda
+Url:		http://www.nvidia.com/cuda/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Suggests:	nvidia >= %{driver_ver}
+# We don't require installation of the NVIDIA graphics drivers so that 
+# folks can do CUDA development on systems without NVIDIA hardware.
 
 %description
 NVIDIA(R) CUDA(TM) is a general purpose parallel computing architecture
@@ -38,7 +39,7 @@ Summary:	NVIDIA CUDA Toolkit development files
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
 Suggests:	nvidia-devel >= %{driver_ver}
-%define _requires_exceptions libcuda.so.1
+%define _requires_exceptions libcuda.so.3\\|libcudart.so.3
 
 %description devel
 NVIDIA(R) CUDA(TM) is a general purpose parallel computing architecture
@@ -84,24 +85,16 @@ This package contains the Compute Visual Profiler for CUDA and OpenCL.
 %__rm -rf %{buildroot}
 
 %__install -d -m 755 %{buildroot}%{_usr}
-tar zxf %SOURCE3
 
-# Replace the cuda-gdb file in the toolkit with one that has
-# been modified to dynamically link against libraries available in Mandriva
-# 2010.1:
 %ifarch %ix86
 bash %SOURCE0 --tar xf -C %{buildroot}%{_usr}
-%__install -m 755 cuda-gdb.32 %{buildroot}%{_bindir}/cuda-gdb
 %else
 bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
-%__install -m 755 cuda-gdb.64 %{buildroot}%{_bindir}/cuda-gdb
 %__rm -rf %{buildroot}/usr/lib 
 %__sed -i 's/lib/lib64/g' %{buildroot}%{_bindir}/nvcc.profile
 %endif
 
 %__mv %{buildroot}%{_usr}/doc ./
-%__install -d -m 755 %{buildroot}%{_datadir}
-%__mv %{buildroot}%{_usr}/man %{buildroot}%{_mandir}
 
 %__mv %{buildroot}%{_usr}/computeprof/bin/computeprof %{buildroot}%{_bindir}/
 %__mkdir computeprofdoc
@@ -132,7 +125,6 @@ bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 %exclude %_bindir/computeprof
 %_libdir/*.so
 %_includedir/*
-%_mandir/*
 %_usr/open64/*
 %exclude %_usr/src
 %exclude %_usr/install-linux.pl
