@@ -96,6 +96,9 @@ bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 
 %__mv %{buildroot}%{_usr}/doc ./
 
+%__rm -rf %{buildroot}%{_usr}/src
+%__rm -rf %{buildroot}%{_usr}/install-linux.pl
+
 %__mv %{buildroot}%{_usr}/computeprof/bin/computeprof %{buildroot}%{_bindir}/
 %__mkdir computeprofdoc
 %__mv %{buildroot}%{_usr}/computeprof/*.txt computeprofdoc/
@@ -115,8 +118,6 @@ bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 %files
 %_libdir/*.so.*
 %_sysconfdir/init.d/*
-%exclude %_usr/src
-%exclude %_usr/install-linux.pl
 
 %files devel
 %defattr(-,root,root)
@@ -126,8 +127,6 @@ bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 %_libdir/*.so
 %_includedir/*
 %_usr/open64/*
-%exclude %_usr/src
-%exclude %_usr/install-linux.pl
 
 %files -n nvidia-compute-profiler
 %defattr(-,root,root)
