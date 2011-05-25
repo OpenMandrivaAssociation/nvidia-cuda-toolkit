@@ -1,20 +1,22 @@
 %define name	nvidia-cuda-toolkit
-%define version 3.2.16
+%define version 4.0.17
 %define release %mkrel 1
 
-%define driver_ver 260.19.21
+%define driver_ver 270.41
 
 Summary:	NVIDIA CUDA Toolkit libraries
 Name:		%{name}
 Version:	%{version}
 Release:	%{release}
-Source0:	cudatoolkit_%{version}_linux_32_ubuntu10.04.run
-Source1:	cudatoolkit_%{version}_linux_64_ubuntu10.04.run
+Source0:	cudatoolkit_%{version}_linux_32_ubuntu10.10.run
+Source1:	cudatoolkit_%{version}_linux_64_ubuntu10.10.run
 Source2:	nvidia
 License:	Freeware
 Group:		System/Libraries
 Url:		http://www.nvidia.com/cuda/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+Requires(post):	/sbin/ldconfig
+Requires(postun): /sbin/ldconfig
 Suggests:	nvidia >= %{driver_ver}
 # We don't require installation of the NVIDIA graphics drivers so that 
 # folks can do CUDA development on systems without NVIDIA hardware.
@@ -39,7 +41,7 @@ Summary:	NVIDIA CUDA Toolkit development files
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
 Suggests:	nvidia-devel >= %{driver_ver}
-%define _requires_exceptions libcuda.so.3\\|libcudart.so.3
+%define _requires_exceptions libcuda.so.4\\|libcudart.so.4
 
 %description devel
 NVIDIA(R) CUDA(TM) is a general purpose parallel computing architecture
