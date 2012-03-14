@@ -1,16 +1,18 @@
 %define name	nvidia-cuda-toolkit
-%define version 4.0.17
+%define version 4.1.28
 %define release %mkrel 1
 
-%define driver_ver 270.41
+%define driver_ver 285.05
 
+%define _requires_exceptions libcuda.so.1\\|libcudart.so.4\\|devel(libcuda.*)\\|devel(libcudart.*)\\|python(abi)
 Summary:	NVIDIA CUDA Toolkit libraries
 Name:		%{name}
 Version:	%{version}
 Release:	%{release}
-Source0:	cudatoolkit_%{version}_linux_32_ubuntu10.10.run
-Source1:	cudatoolkit_%{version}_linux_64_ubuntu10.10.run
+Source0:	cudatoolkit_%{version}_linux_32_ubuntu11.04.run
+Source1:	cudatoolkit_%{version}_linux_64_ubuntu11.04.run
 Source2:	nvidia
+Source10:	nvvp.desktop
 License:	Freeware
 Group:		System/Libraries
 Url:		http://www.nvidia.com/cuda/
@@ -18,8 +20,12 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Requires(post):	/sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 Suggests:	nvidia >= %{driver_ver}
+
 # We don't require installation of the NVIDIA graphics drivers so that 
 # folks can do CUDA development on systems without NVIDIA hardware.
+
+# A library, libcudainj.so, was introduced in CUDA 4.1, which depends
+# on libcuda.so. It is not needed to compile CUDA programs, though.
 
 %description
 NVIDIA(R) CUDA(TM) is a general purpose parallel computing architecture
@@ -41,7 +47,7 @@ Summary:	NVIDIA CUDA Toolkit development files
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
 Suggests:	nvidia-devel >= %{driver_ver}
-%define _requires_exceptions libcuda.so.4\\|libcudart.so.4
+Suggests:	gcc-c++
 
 %description devel
 NVIDIA(R) CUDA(TM) is a general purpose parallel computing architecture
@@ -61,10 +67,14 @@ that make use of CUDA.
 %package -n nvidia-compute-profiler
 Summary:	NVIDIA Compute Visual Profiler
 Group:		Development/Other
-Requires:	%{name} = %{version}-%{release}
+Requires:	java
 Obsoletes:	nvidia-cuda-profiler, nvidia-opencl-profiler
 Suggests:	nvidia-devel >= %{driver_ver}
-Suggests:	qt4-assistant
+Suggests:	%{name} = %{version}-%{release}
+BuildRequires:	imagemagick
+
+# We don't strictly require NVIDIA CUDA Toolkit, because the profiler
+# could be used to analyze CSV profile logs obtained elsewhere.
 
 %description -n nvidia-compute-profiler
 NVIDIA(R) CUDA(TM) is a general purpose parallel computing architecture
@@ -87,6 +97,9 @@ This package contains the Compute Visual Profiler for CUDA and OpenCL.
 %__rm -rf %{buildroot}
 
 %__install -d -m 755 %{buildroot}%{_usr}
+%__install -d -m 755 %{buildroot}%{_datadir}/%{name}
+%__install -d -m 755 %{buildroot}/%{_docdir}/%{name}-devel
+%__install -d -m755 %{buildroot}%{_datadir}/applications
 
 %ifarch %ix86
 bash %SOURCE0 --tar xf -C %{buildroot}%{_usr}
@@ -96,19 +109,20 @@ bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 %__sed -i 's/lib/lib64/g' %{buildroot}%{_bindir}/nvcc.profile
 %endif
 
-%__mv %{buildroot}%{_usr}/doc ./
-
-%__rm -rf %{buildroot}%{_usr}/src
+%__mv %{buildroot}%{_usr}/doc %{buildroot}/%{_docdir}/%{name}-devel/
 %__rm -rf %{buildroot}%{_usr}/install-linux.pl
+%__mv %{buildroot}%{_usr}/{extras,src,tools} %{buildroot}/%{_datadir}/%{name}
+%__rm -rf %{buildroot}/%{_usr}/libnvvp/jre
+%__ln_s %{_usr}/libnvvp/nvvp %{buildroot}/%{_bindir}
 
-%__mv %{buildroot}%{_usr}/computeprof/bin/computeprof %{buildroot}%{_bindir}/
-%__mkdir computeprofdoc
-%__mv %{buildroot}%{_usr}/computeprof/*.txt computeprofdoc/
-%__mv %{buildroot}%{_usr}/computeprof/doc/* computeprofdoc/
-%__mv %{buildroot}%{_usr}/computeprof/projects computeprofdoc/
-%__rm -rf %{buildroot}%{_usr}/computeprof
+
+for S in 16 24 32 48 64 128 192 256; do
+ %__install -d -m755 %{buildroot}%{_iconsdir}/hicolor/$S\x$S/apps
+ convert -scale $S\x$S %{buildroot}/%{_usr}/libnvvp/icon.xpm %{buildroot}%{_iconsdir}/hicolor/$S\x$S/apps/nvvp.png
+done
 
 %__install -D -m 755 %SOURCE2 %{buildroot}%{_sysconfdir}/init.d/nvidia
+%__install -m644 %{SOURCE10} %{buildroot}%{_datadir}/applications/
 
 %clean
 %__rm -rf %{buildroot}
@@ -123,15 +137,20 @@ bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
 
 %files devel
 %defattr(-,root,root)
-%doc doc/*
+%doc %{_docdir}/%{name}-devel/*
 %_bindir/*
-%exclude %_bindir/computeprof
+%exclude %_bindir/nvvp
 %_libdir/*.so
 %_includedir/*
 %_usr/open64/*
+%_usr/nvvm/*
+%_datadir/%{name}/*
 
 %files -n nvidia-compute-profiler
 %defattr(-,root,root)
-%doc computeprofdoc/*
-%_bindir/computeprof
+%_bindir/nvvp
+%_usr/libnvvp/.eclipseproduct
+%_usr/libnvvp/*
+%_datadir/applications/nvvp.desktop
+%_iconsdir/hicolor/*
 
