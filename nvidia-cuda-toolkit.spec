@@ -4,7 +4,8 @@
 
 %define driver_ver 285.05
 
-%define _requires_exceptions libcuda.so.1\\|libcudart.so.4\\|devel(libcuda.*)\\|devel(libcudart.*)\\|python(abi)
+%define __noautoreq 'libcuda.so.1\\|libcudart.so.4\\|devel(libcuda.*)\\|devel(libcudart.*)\\|python(abi)'
+
 Summary:	NVIDIA CUDA Toolkit libraries
 Name:		%{name}
 Version:	%{version}
