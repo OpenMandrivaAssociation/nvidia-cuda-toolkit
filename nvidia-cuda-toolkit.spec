@@ -1,14 +1,14 @@
 %define name	nvidia-cuda-toolkit
 %define version 4.1.28
-%define release %mkrel 1
+%define release %mkrel 2
 
 %define driver_ver 285.05
 
-%define req_regex  'libcuda.so.1\\|libcudart.so.4\\|devel(libcuda.*)\\|devel(libcudart.*)\\|python(abi)'
+%define noautoreq_regex libcuda.so.*\\|libcudart.so.*\\|devel\(libcuda.*\)\\|devel\(libcudart.*\)\\|python\(abi\)
 %if %{_use_internal_dependency_generator}
-%define __noautoreq %{req_regex}
+%define __noautoreq %{noautoreq_regex}
 %else
-%define _requires_exceptions %{req_regex}
+%define _requires_exceptions %{noautoreq_regex}
 %endif
 
 Summary:	NVIDIA CUDA Toolkit libraries
