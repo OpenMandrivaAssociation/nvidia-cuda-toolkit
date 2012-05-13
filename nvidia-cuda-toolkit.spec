@@ -1,8 +1,13 @@
 %define name	nvidia-cuda-toolkit
-%define version 4.1.28
-%define release %mkrel 2
+%define version 4.2.9
+%define	rel		1
+%if %mdkversion < 201100
+%define release %mkrel %{rel}
+%else
+%define release %{rel}
+%endif
 
-%define driver_ver 285.05
+%define driver_ver 295.40
 
 %define noautoreq_regex libcuda.so.*\\|libcudart.so.*\\|devel\(libcuda.*\)\\|devel\(libcudart.*\)\\|python\(abi\)
 %if %{_use_internal_dependency_generator}
@@ -15,8 +20,8 @@ Summary:	NVIDIA CUDA Toolkit libraries
 Name:		%{name}
 Version:	%{version}
 Release:	%{release}
-Source0:	cudatoolkit_%{version}_linux_32_ubuntu11.04.run
-Source1:	cudatoolkit_%{version}_linux_64_ubuntu11.04.run
+Source0:	http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/cudatoolkit_%{version}_linux_32_ubuntu11.04.run
+Source1:	http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/cudatoolkit_%{version}_linux_64_ubuntu11.04.run
 Source2:	nvidia
 Source10:	nvvp.desktop
 License:	Freeware
@@ -49,11 +54,11 @@ This package contains the libraries and attendant files needed to run
 programs that make use of CUDA.
 
 %package devel
-Summary:	NVIDIA CUDA Toolkit development files
-Group:		Development/C
-Requires:	%{name} = %{version}-%{release}
-Suggests:	nvidia-devel >= %{driver_ver}
-Suggests:	gcc-c++
+Summary:		NVIDIA CUDA Toolkit development files
+Group:			Development/C
+Requires:		%{name} = %{version}-%{release}
+Suggests:		nvidia-devel >= %{driver_ver}
+Suggests:		gcc-c++
 
 %description devel
 NVIDIA(R) CUDA(TM) is a general purpose parallel computing architecture
@@ -71,12 +76,12 @@ This package contains the development files needed to build programs
 that make use of CUDA.
 
 %package -n nvidia-compute-profiler
-Summary:	NVIDIA Compute Visual Profiler
-Group:		Development/Other
-Requires:	java
-Obsoletes:	nvidia-cuda-profiler, nvidia-opencl-profiler
-Suggests:	nvidia-devel >= %{driver_ver}
-Suggests:	%{name} = %{version}-%{release}
+Summary:		NVIDIA Compute Visual Profiler
+Group:			Development/Other
+Requires:		java
+Obsoletes:		nvidia-cuda-profiler, nvidia-opencl-profiler
+Suggests:		nvidia-devel >= %{driver_ver}
+Suggests:		%{name} = %{version}-%{release}
 BuildRequires:	imagemagick
 
 # We don't strictly require NVIDIA CUDA Toolkit, because the profiler
