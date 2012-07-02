@@ -1,6 +1,6 @@
 %define name	nvidia-cuda-toolkit
 %define version 4.2.9
-%define	rel	2
+%define	rel	3
 %if %mdkversion < 201100
 %define release %mkrel %{rel}
 %else
@@ -10,7 +10,7 @@
 %define driver_ver 295.40
 
 %if %{_use_internal_dependency_generator}
-%define __noautoreq  'libcuda.so.*|libcudart.so.*|devel\(libcuda.*\)|devel\(libcudart.*\)|python\(abi\)'
+%define __noautoreq 'libcuda.so.*|libcudart.so.*|devel\\(libcuda.*\\)|devel\\(libcudart.*\\)|python\\(abi\\)'
 %else
 %define _requires_exceptions libcuda.so.*\\|libcudart.so.*\\|devel(libcuda.*)\\|devel(libcudart.*)\\|python(abi)
 %endif
