@@ -1,0 +1,5 @@
+sources:
+  "cudatoolkit_4.2.9_linux_32_ubuntu11.04.run:"	f570837a0b98a5c1d440d11053a48649887fd5c9
+  "cudatoolkit_4.2.9_linux_64_ubuntu11.04.run:"	1d7404e69affb487f9c6a0f2ea904d72f3a0f7e5
+  "nvidia:"	af8037301e883e15ab9ef4f83ad86fdd21d69704
+  "nvvp.desktop:"	b700b1d01c401dcb07e1b5317c54282dcd4e3a37
