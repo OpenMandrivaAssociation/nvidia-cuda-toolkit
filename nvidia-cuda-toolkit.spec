@@ -1,6 +1,6 @@
 %define name nvidia-cuda-toolkit
-%define version 4.2.9
-%define rel 5
+%define version 5.5.22
+%define rel 1
 %if %mdkversion < 201100
 %define release %mkrel %{rel}
 %else
