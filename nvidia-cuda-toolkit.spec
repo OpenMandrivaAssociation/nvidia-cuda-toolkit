@@ -1,12 +1,3 @@
-%define name nvidia-cuda-toolkit
-%define version 5.5.22
-%define rel 1
-%if %mdkversion < 201100
-%define release %mkrel %{rel}
-%else
-%define release %{rel}
-%endif
-
 %define driver_ver 295.40
 
 %if %{_use_internal_dependency_generator}
@@ -19,11 +10,11 @@
 %endif
 
 Summary:	NVIDIA CUDA Toolkit libraries
-Name:		%{name}
-Version:	%{version}
-Release:	%{release}
-Source0:	http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/cudatoolkit_%{version}_linux_32_ubuntu11.04.run
-Source1:	http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/cudatoolkit_%{version}_linux_64_ubuntu11.04.run
+Name:		nvidia-cuda-toolkit
+Version:	5.5.22
+Release:	1
+Source0:	http://developer.download.nvidia.com/compute/cuda/5_5/rel/installers/cuda_%{version}_linux_64.run
+Source1:	http://developer.download.nvidia.com/compute/cuda/5_5/rel/installers/cuda_%{version}_linux_32.run
 Source2:	nvidia
 Source10:	nvvp.desktop
 License:	Freeware
