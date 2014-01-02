@@ -1,12 +1,3 @@
-%define name	nvidia-cuda-toolkit
-%define version 4.2.9
-%define	rel	5
-%if %mdkversion < 201100
-%define release %mkrel %{rel}
-%else
-%define release %{rel}
-%endif
-
 %define driver_ver 295.40
 
 %if %{_use_internal_dependency_generator}
@@ -18,9 +9,9 @@
 %endif
 
 Summary:	NVIDIA CUDA Toolkit libraries
-Name:		%{name}
-Version:	%{version}
-Release:	%{release}
+Name:		nvidia-cuda-toolkit
+Version:	4.2.9
+Release:	6
 Source0:	http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/cudatoolkit_%{version}_linux_32_ubuntu11.04.run
 Source1:	http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/cudatoolkit_%{version}_linux_64_ubuntu11.04.run
 Source2:	nvidia
@@ -106,7 +97,6 @@ This package contains the Compute Visual Profiler for CUDA and OpenCL.
 %setup -q -T -c %{name}-%{version}
 
 %install
-%__rm -rf %{buildroot}
 
 %__install -d -m 755 %{buildroot}%{_usr}
 %__install -d -m 755 %{buildroot}%{_datadir}/%{name}
@@ -136,8 +126,6 @@ done
 %__install -D -m 755 %SOURCE2 %{buildroot}%{_sysconfdir}/init.d/nvidia
 %__install -m644 %{SOURCE10} %{buildroot}%{_datadir}/applications/
 
-%clean
-%__rm -rf %{buildroot}
 
 %post -p /sbin/ldconfig
 
