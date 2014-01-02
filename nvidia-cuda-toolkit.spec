@@ -13,6 +13,7 @@
 %define __noautoreq 'libcuda.so.*|libcudart.so.*|devel\\(libcuda.*\\)|devel\\(libcudart.*\\)|python\\(abi\\)|libnvcuvid\\.so\\.(.*)'
 %define	__noautoprovfiles /usr/libnvvp
 %define	__noautoreqfiles /usr/libnvvp
+%define __noautoprov 'libcairo\\.so\\.2(.*)'
 %else
 %define _requires_exceptions libcuda.so.*\\|libcudart.so.*\\|devel(libcuda.*)\\|devel(libcudart.*)\\|python(abi)\\|libnvcuvid.so.*
 %endif
