@@ -1,6 +1,6 @@
-%define name	nvidia-cuda-toolkit
+%define name nvidia-cuda-toolkit
 %define version 4.2.9
-%define	rel	5
+%define rel 5
 %if %mdkversion < 201100
 %define release %mkrel %{rel}
 %else
@@ -28,9 +28,8 @@ Source10:	nvvp.desktop
 License:	Freeware
 Group:		System/Libraries
 Url:		http://www.nvidia.com/cuda/
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Requires(post):	/sbin/ldconfig
-Requires(postun): /sbin/ldconfig
+Requires(postun):	/sbin/ldconfig
 Suggests:	nvidia >= %{driver_ver}
 
 # We don't require installation of the NVIDIA graphics drivers so that 
@@ -55,11 +54,11 @@ This package contains the libraries and attendant files needed to run
 programs that make use of CUDA.
 
 %package devel
-Summary:		NVIDIA CUDA Toolkit development files
-Group:			Development/C
-Requires:		%{name} = %{version}-%{release}
-Suggests:		nvidia-devel >= %{driver_ver}
-Suggests:		gcc-c++
+Summary:	NVIDIA CUDA Toolkit development files
+Group:		Development/C
+Requires:	%{name} = %{version}-%{release}
+Suggests:	nvidia-devel >= %{driver_ver}
+Suggests:	gcc-c++
 
 %description devel
 NVIDIA(R) CUDA(TM) is a general purpose parallel computing architecture
@@ -77,12 +76,12 @@ This package contains the development files needed to build programs
 that make use of CUDA.
 
 %package -n nvidia-compute-profiler
-Summary:		NVIDIA Compute Visual Profiler
-Group:			Development/Other
-Requires:		java
-Obsoletes:		nvidia-cuda-profiler, nvidia-opencl-profiler
-Suggests:		nvidia-devel >= %{driver_ver}
-Suggests:		%{name} = %{version}-%{release}
+Summary:	NVIDIA Compute Visual Profiler
+Group:		Development/Other
+Requires:	java
+Obsoletes:	nvidia-cuda-profiler, nvidia-opencl-profiler
+Suggests:	nvidia-devel >= %{driver_ver}
+Suggests:	%{name} = %{version}-%{release}
 BuildRequires:	imagemagick
 
 # We don't strictly require NVIDIA CUDA Toolkit, because the profiler
@@ -106,7 +105,6 @@ This package contains the Compute Visual Profiler for CUDA and OpenCL.
 %setup -q -T -c %{name}-%{version}
 
 %install
-%__rm -rf %{buildroot}
 
 %__install -d -m 755 %{buildroot}%{_usr}
 %__install -d -m 755 %{buildroot}%{_datadir}/%{name}
@@ -136,8 +134,6 @@ done
 %__install -D -m 755 %SOURCE2 %{buildroot}%{_sysconfdir}/init.d/nvidia
 %__install -m644 %{SOURCE10} %{buildroot}%{_datadir}/applications/
 
-%clean
-%__rm -rf %{buildroot}
 
 %post -p /sbin/ldconfig
 
