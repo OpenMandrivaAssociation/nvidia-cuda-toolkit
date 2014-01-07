@@ -11,11 +11,12 @@
 Summary:	NVIDIA CUDA Toolkit libraries
 Name:		nvidia-cuda-toolkit
 Version:	4.2.9
-Release:	6
+Release:	7
 Source0:	http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/cudatoolkit_%{version}_linux_32_ubuntu11.04.run
 Source1:	http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/cudatoolkit_%{version}_linux_64_ubuntu11.04.run
 Source2:	nvidia
 Source10:	nvvp.desktop
+Source11:	nvidia-cuda-toolkit.rpmlintrc
 License:	Freeware
 Group:		System/Libraries
 Url:		http://www.nvidia.com/cuda/
