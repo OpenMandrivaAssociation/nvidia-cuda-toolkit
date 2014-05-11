@@ -13,10 +13,11 @@ Summary:	NVIDIA CUDA Toolkit libraries
 Name:		nvidia-cuda-toolkit
 Version:	5.5.22
 Release:	1
-Source0:	http://developer.download.nvidia.com/compute/cuda/5_5/rel/installers/cuda_%{version}_linux_64.run
-Source1:	http://developer.download.nvidia.com/compute/cuda/5_5/rel/installers/cuda_%{version}_linux_32.run
+Source0:	http://developer.download.nvidia.com/compute/cuda/5_5/rel/installers/cuda_%{version}_linux_32.run
+Source1:	http://developer.download.nvidia.com/compute/cuda/5_5/rel/installers/cuda_%{version}_linux_64.run
 Source2:	nvidia
 Source10:	nvvp.desktop
+Source11:	nsight.desktop
 License:	Freeware
 Group:		System/Libraries
 Url:		http://www.nvidia.com/cuda/
@@ -93,6 +94,29 @@ FORTRAN and C++.
 
 This package contains the Compute Visual Profiler for CUDA and OpenCL.
 
+%package -n nvidia-nsight
+Summary:	NVIDIA Nsight IDE
+Group:		Development/Other
+Requires:	java
+Suggests:	nvidia-devel >= %{driver_ver}
+
+# We don't strictly require NVIDIA CUDA Toolkit, because Nsight IDE
+# could be used to develop CUDA programs on a remote node.
+
+%description -n nvidia-nsight
+NVIDIAÂ® CUDAâ„¢ is a general purpose parallel computing architecture
+that leverages the parallel compute engine in NVIDIA graphics
+processing units (GPUs) to solve many complex computational problems
+in a fraction of the time required on a CPU. It includes the CUDA
+Instruction Set Architecture (ISA) and the parallel compute engine in
+the GPU. To program to the CUDAâ„¢ architecture, developers can, today,
+use C++, one of the most widely used high-level programming languages,
+which can then be run at great performance on a CUDAâ„¢ enabled
+processor. Support for other languages, like FORTRAN, Python or Java,
+is available from third parties.
+
+This package contains Nsight Eclipse Edition, a full-featured CUDA IDE.
+
 %prep
 %setup -q -T -c %{name}-%{version}
 
@@ -104,28 +128,34 @@ This package contains the Compute Visual Profiler for CUDA and OpenCL.
 %__install -d -m755 %{buildroot}%{_datadir}/applications
 
 %ifarch %ix86
-bash %SOURCE0 --tar xf -C %{buildroot}%{_usr}
+bash %SOURCE0 --tar xf -C .
+./run_files/cuda-linux-rel-%{version}-16488124.run --tar xf -C %{buildroot}%{_usr}
 %else
-bash %SOURCE1 --tar xf -C %{buildroot}%{_usr}
+bash %SOURCE1 --tar xf -C . 
+./run_files/cuda-linux64-rel-%{version}-16488124.run --tar xf -C %{buildroot}%{_usr}
 %__rm -rf %{buildroot}/usr/lib 
 %__sed -i 's/lib/lib64/g' %{buildroot}%{_bindir}/nvcc.profile
+# (tmb) restore libdevice
+sed -i 's/lib64device/libdevice/g' %{buildroot}%{_bindir}/nvcc.profile
 %endif
 
 %__mv %{buildroot}%{_usr}/doc %{buildroot}/%{_docdir}/%{name}-devel/
 %__rm -rf %{buildroot}%{_usr}/install-linux.pl
 %__mv %{buildroot}%{_usr}/{extras,src,tools} %{buildroot}/%{_datadir}/%{name}
-%__rm -rf %{buildroot}/%{_usr}/libnvvp/jre
-%__ln_s %{_usr}/libnvvp/nvvp %{buildroot}/%{_bindir}
+%__rm -rf %{buildroot}/%{_usr}/jre
 
+%__rm -rf %{buildroot}%{_usr}/InstallUtils.pm
+%__mv %{buildroot}%{_usr}/EULA.txt %{buildroot}%{_docdir}/%{name}-devel/
 
 for S in 16 24 32 48 64 128 192 256; do
  %__install -d -m755 %{buildroot}%{_iconsdir}/hicolor/$S\x$S/apps
  convert -scale $S\x$S %{buildroot}/%{_usr}/libnvvp/icon.xpm %{buildroot}%{_iconsdir}/hicolor/$S\x$S/apps/nvvp.png
+ convert -scale $S\x$S %{buildroot}/%{_usr}/libnsight/icon.xpm %{buildroot}%{_iconsdir}/hicolor/$S\x$S/apps/nsight.png
 done
 
 %__install -D -m 755 %SOURCE2 %{buildroot}%{_sysconfdir}/init.d/nvidia
 %__install -m644 %{SOURCE10} %{buildroot}%{_datadir}/applications/
-
+%__install -m644 %{SOURCE11} %{buildroot}%{_datadir}/applications/
 
 %post -p /sbin/ldconfig
 
@@ -140,7 +170,9 @@ done
 %doc %{_docdir}/%{name}-devel/*
 %_bindir/*
 %exclude %_bindir/nvvp
+%exclude %_bindir/nsight
 %_libdir/*.so
+%_libdir/*.a
 %_includedir/*
 %_usr/open64/*
 %_usr/nvvm/*
@@ -152,5 +184,11 @@ done
 %_usr/libnvvp/.eclipseproduct
 %_usr/libnvvp/*
 %_datadir/applications/nvvp.desktop
-%_iconsdir/hicolor/*
+%_iconsdir/hicolor/*/apps/nvvp.png
 
+%files -n nvidia-nsight
+%_bindir/nsight
+%_usr/libnsight/.eclipseproduct
+%_usr/libnsight/*
+%_datadir/applications/nsight.desktop
+%_iconsdir/hicolor/*/apps/nsight.png
