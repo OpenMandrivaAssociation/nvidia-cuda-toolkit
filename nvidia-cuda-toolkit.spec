@@ -18,6 +18,7 @@ Source1:	http://developer.download.nvidia.com/compute/cuda/5_5/rel/installers/cu
 Source2:	nvidia
 Source10:	nvvp.desktop
 Source11:	nsight.desktop
+Source100:	nvidia-cuda-toolkit.rpmlintrc
 License:	Freeware
 Group:		System/Libraries
 Url:		http://www.nvidia.com/cuda/
