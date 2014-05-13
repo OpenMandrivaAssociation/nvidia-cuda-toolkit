@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Name=NVIDIA Visual Profiler
+Name[ru]=NVIDIA Visual Profiler
+GenericName=NVIDIA Visual Profiler
+GenericName[ru]=NVIDIA Visual Profiler
+Comment=Run, profile and analyze CUDA applications
+Comment[ru]=Запуск, профилирование и анализа приложений CUDA
+Exec=nvvp
+Icon=nvvp
+Terminal=false
+Type=Application
+Categories=GNOME;GTK;Development;Profiling;
+StartupNotify=true

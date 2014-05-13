@@ -2,14 +2,15 @@
 
 %if %{_use_internal_dependency_generator}
 %define __noautoreq 'libcuda.so.*|libcudart.so.*|devel\\(libcuda.*\\)|devel\\(libcudart.*\\)|python\\(abi\\)|libnvcuvid\\.so\\.(.*)'
-%define	__noautoprovfiles /usr/libnvvp
-%define	__noautoreqfiles /usr/libnvvp
+%define __noautoprovfiles /usr/libnvvp
+%define __noautoreqfiles /usr/libnvvp
 %define __noautoprov 'libcairo\\.so\\.2(.*)'
 %else
 %define _requires_exceptions libcuda.so.*\\|libcudart.so.*\\|devel(libcuda.*)\\|devel(libcudart.*)\\|python(abi)\\|libnvcuvid.so.*
 %endif
 
 Summary:	NVIDIA CUDA Toolkit libraries
+
 Name:		nvidia-cuda-toolkit
 Version:	5.5.22
 Release:	1
@@ -22,8 +23,6 @@ Source100:	nvidia-cuda-toolkit.rpmlintrc
 License:	Freeware
 Group:		System/Libraries
 Url:		http://www.nvidia.com/cuda/
-Requires(post):	/sbin/ldconfig
-Requires(postun):	/sbin/ldconfig
 Suggests:	nvidia >= %{driver_ver}
 
 # We don't require installation of the NVIDIA graphics drivers so that 
@@ -49,6 +48,7 @@ programs that make use of CUDA.
 
 %package devel
 Summary:	NVIDIA CUDA Toolkit development files
+
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
 Suggests:	nvidia-devel >= %{driver_ver}
@@ -71,6 +71,7 @@ that make use of CUDA.
 
 %package -n nvidia-compute-profiler
 Summary:	NVIDIA Compute Visual Profiler
+
 Group:		Development/Other
 Requires:	java
 Obsoletes:	nvidia-cuda-profiler, nvidia-opencl-profiler
@@ -97,6 +98,7 @@ This package contains the Compute Visual Profiler for CUDA and OpenCL.
 
 %package -n nvidia-nsight
 Summary:	NVIDIA Nsight IDE
+
 Group:		Development/Other
 Requires:	java
 Suggests:	nvidia-devel >= %{driver_ver}
@@ -123,73 +125,67 @@ This package contains Nsight Eclipse Edition, a full-featured CUDA IDE.
 
 %install
 
-%__install -d -m 755 %{buildroot}%{_usr}
-%__install -d -m 755 %{buildroot}%{_datadir}/%{name}
-%__install -d -m 755 %{buildroot}/%{_docdir}/%{name}-devel
-%__install -d -m755 %{buildroot}%{_datadir}/applications
+install -d -m 755 %{buildroot}%{_usr}
+install -d -m 755 %{buildroot}%{_datadir}/%{name}
+install -d -m 755 %{buildroot}/%{_docdir}/%{name}-devel
+install -d -m755 %{buildroot}%{_datadir}/applications
 
 %ifarch %ix86
-bash %SOURCE0 --tar xf -C .
+bash %{SOURCE0} --tar xf -C .
 ./run_files/cuda-linux-rel-%{version}-16488124.run --tar xf -C %{buildroot}%{_usr}
 %else
-bash %SOURCE1 --tar xf -C . 
+bash %{SOURCE1} --tar xf -C . 
 ./run_files/cuda-linux64-rel-%{version}-16488124.run --tar xf -C %{buildroot}%{_usr}
-%__rm -rf %{buildroot}/usr/lib 
-%__sed -i 's/lib/lib64/g' %{buildroot}%{_bindir}/nvcc.profile
+rm -rf %{buildroot}/usr/lib 
+sed -i 's/lib/lib64/g' %{buildroot}%{_bindir}/nvcc.profile
 # (tmb) restore libdevice
 sed -i 's/lib64device/libdevice/g' %{buildroot}%{_bindir}/nvcc.profile
 %endif
 
-%__mv %{buildroot}%{_usr}/doc %{buildroot}/%{_docdir}/%{name}-devel/
-%__rm -rf %{buildroot}%{_usr}/install-linux.pl
-%__mv %{buildroot}%{_usr}/{extras,src,tools} %{buildroot}/%{_datadir}/%{name}
-%__rm -rf %{buildroot}/%{_usr}/jre
+mv %{buildroot}%{_usr}/doc %{buildroot}/%{_docdir}/%{name}-devel/
+rm -rf %{buildroot}%{_usr}/install-linux.pl
+mv %{buildroot}%{_usr}/{extras,src,tools} %{buildroot}/%{_datadir}/%{name}
+rm -rf %{buildroot}/%{_usr}/jre
 
-%__rm -rf %{buildroot}%{_usr}/InstallUtils.pm
-%__mv %{buildroot}%{_usr}/EULA.txt %{buildroot}%{_docdir}/%{name}-devel/
+rm -rf %{buildroot}%{_usr}/InstallUtils.pm
+mv %{buildroot}%{_usr}/EULA.txt %{buildroot}%{_docdir}/%{name}-devel/
 
 for S in 16 24 32 48 64 128 192 256; do
- %__install -d -m755 %{buildroot}%{_iconsdir}/hicolor/$S\x$S/apps
+ install -d -m755 %{buildroot}%{_iconsdir}/hicolor/$S\x$S/apps
  convert -scale $S\x$S %{buildroot}/%{_usr}/libnvvp/icon.xpm %{buildroot}%{_iconsdir}/hicolor/$S\x$S/apps/nvvp.png
  convert -scale $S\x$S %{buildroot}/%{_usr}/libnsight/icon.xpm %{buildroot}%{_iconsdir}/hicolor/$S\x$S/apps/nsight.png
 done
 
-%__install -D -m 755 %SOURCE2 %{buildroot}%{_sysconfdir}/init.d/nvidia
-%__install -m644 %{SOURCE10} %{buildroot}%{_datadir}/applications/
-%__install -m644 %{SOURCE11} %{buildroot}%{_datadir}/applications/
-
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+install -d -m 755 %{SOURCE2} %{buildroot}%{_sysconfdir}/init.d/nvidia
+install -m644 %{SOURCE10} %{buildroot}%{_datadir}/applications/
+install -m644 %{SOURCE11} %{buildroot}%{_datadir}/applications/
 
 %files
-%_libdir/*.so.*
-%_sysconfdir/init.d/*
+%{_libdir}/*.so.*
+%{_sysconfdir}/init.d/*
 
 %files devel
-%defattr(-,root,root)
 %doc %{_docdir}/%{name}-devel/*
-%_bindir/*
-%exclude %_bindir/nvvp
-%exclude %_bindir/nsight
-%_libdir/*.so
-%_libdir/*.a
-%_includedir/*
-%_usr/open64/*
-%_usr/nvvm/*
-%_datadir/%{name}/*
+%{_bindir}/*
+%exclude %{_bindir}/nvvp
+%exclude %{_bindir}/nsight
+%{_libdir}/*.so
+%{_libdir}/*.a
+%{_includedir}/*
+%{_usr}/open64/*
+%{_usr}/nvvm/*
+%{_datadir}/%{name}/*
 
 %files -n nvidia-compute-profiler
-%defattr(-,root,root)
-%_bindir/nvvp
-%_usr/libnvvp/.eclipseproduct
-%_usr/libnvvp/*
-%_datadir/applications/nvvp.desktop
-%_iconsdir/hicolor/*/apps/nvvp.png
+%{_bindir}/nvvp
+%{_usr}/libnvvp/.eclipseproduct
+%{_usr}/libnvvp/*
+%{_datadir}/applications/nvvp.desktop
+%{_iconsdir}/hicolor/*/apps/nvvp.png
 
 %files -n nvidia-nsight
-%_bindir/nsight
-%_usr/libnsight/.eclipseproduct
-%_usr/libnsight/*
-%_datadir/applications/nsight.desktop
-%_iconsdir/hicolor/*/apps/nsight.png
+%{_bindir}/nsight
+%{_usr}/libnsight/.eclipseproduct
+%{_usr}/libnsight/*
+%{_datadir}/applications/nsight.desktop
+%{_iconsdir}/hicolor/*/apps/nsight.png

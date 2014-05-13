@@ -1,8 +1,11 @@
 [Desktop Entry]
 Version=1.0
 Name=NVIDIA Nsight
+Name[ru]=NVIDIA Nsight
 GenericName=NVIDIA Nsight IDE
+GenericName[ru]=NVIDIA Nsight IDE
 Comment=Develop CUDA applications
+Comment[ru]=Среда разработки приложений на CUDA
 Exec=nsight
 Icon=nsight
 Terminal=false
