@@ -13,7 +13,7 @@ Summary:	NVIDIA CUDA Toolkit libraries
 
 Name:		nvidia-cuda-toolkit
 Version:	5.5.22
-Release:	2
+Release:	3
 Source0:	http://developer.download.nvidia.com/compute/cuda/5_5/rel/installers/cuda_%{version}_linux_32.run
 Source1:	http://developer.download.nvidia.com/compute/cuda/5_5/rel/installers/cuda_%{version}_linux_64.run
 Source2:	nvidia
