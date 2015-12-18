@@ -156,7 +156,7 @@ for S in 16 24 32 48 64 128 192 256; do
  convert -scale $S\x$S %{buildroot}/%{_usr}/libnsight/icon.xpm %{buildroot}%{_iconsdir}/hicolor/$S\x$S/apps/nsight.png
 done
 
-install -d -m 755 %{SOURCE2} %{buildroot}%{_sysconfdir}/init.d/nvidia
+install -D -m 755 %{SOURCE2} %{buildroot}%{_sysconfdir}/init.d/nvidia
 install -m644 %{SOURCE10} %{buildroot}%{_datadir}/applications/
 install -m644 %{SOURCE11} %{buildroot}%{_datadir}/applications/
 
