@@ -1,9 +1,10 @@
-%define driver_ver 295.40
+%define driver_ver 352.39
 
 %if %{_use_internal_dependency_generator}
 %define __noautoreq 'libcuda.so.*|libcudart.so.*|devel\\(libcuda.*\\)|devel\\(libcudart.*\\)|python\\(abi\\)|libnvcuvid\\.so\\.(.*)'
 %define __noautoprovfiles /usr/libnvvp
-%define __noautoreqfiles /usr/libnvvp
+# cuda-gdb still requires libcurses5.so
+%define __noautoreqfiles /usr/libnvvp|/usr/bin/cuda-gdb
 %define __noautoprov 'libcairo\\.so\\.2(.*)'
 %else
 %define _requires_exceptions libcuda.so.*\\|libcudart.so.*\\|devel(libcuda.*)\\|devel(libcudart.*)\\|python(abi)\\|libnvcuvid.so.*
@@ -12,10 +13,9 @@
 Summary:	NVIDIA CUDA Toolkit libraries
 
 Name:		nvidia-cuda-toolkit
-Version:	5.5.22
-Release:	3
-Source0:	http://developer.download.nvidia.com/compute/cuda/5_5/rel/installers/cuda_%{version}_linux_32.run
-Source1:	http://developer.download.nvidia.com/compute/cuda/5_5/rel/installers/cuda_%{version}_linux_64.run
+Version:	7.5.18
+Release:	1
+Source0:	http://developer.download.nvidia.com/compute/cuda/6_5/rel/installers/cuda_%{version}_linux.run
 Source2:	nvidia
 Source10:	nvvp.desktop
 Source11:	nsight.desktop
@@ -24,6 +24,7 @@ License:	Freeware
 Group:		System/Libraries
 Url:		http://www.nvidia.com/cuda/
 Suggests:	nvidia >= %{driver_ver}
+ExclusiveArch:	x86_64
 
 # We don't require installation of the NVIDIA graphics drivers so that 
 # folks can do CUDA development on systems without NVIDIA hardware.
@@ -130,25 +131,27 @@ install -d -m 755 %{buildroot}%{_datadir}/%{name}
 install -d -m 755 %{buildroot}/%{_docdir}/%{name}-devel
 install -d -m755 %{buildroot}%{_datadir}/applications
 
-%ifarch %ix86
-bash %{SOURCE0} --tar xf -C .
-./run_files/cuda-linux-rel-%{version}-16488124.run --tar xf -C %{buildroot}%{_usr}
-%else
-bash %{SOURCE1} --tar xf -C . 
-./run_files/cuda-linux64-rel-%{version}-16488124.run --tar xf -C %{buildroot}%{_usr}
+bash %{SOURCE0} --tar xf -C . 
+./run_files/cuda-linux64-rel-%{version}-19867135.run --tar xf -C %{buildroot}%{_usr}
 rm -rf %{buildroot}/usr/lib 
 sed -i 's/lib/lib64/g' %{buildroot}%{_bindir}/nvcc.profile
 # (tmb) restore libdevice
 sed -i 's/lib64device/libdevice/g' %{buildroot}%{_bindir}/nvcc.profile
-%endif
 
 mv %{buildroot}%{_usr}/doc %{buildroot}/%{_docdir}/%{name}-devel/
 rm -rf %{buildroot}%{_usr}/install-linux.pl
+rm -rf %{buildroot}%{_usr}/uninstall_cuda.pl
+rm -rf %{buildroot}%{_usr}/version.txt
+
+# dont ship gdb files
+rm -rf %{buildroot}%_datadir/gdb
+
 mv %{buildroot}%{_usr}/{extras,src,tools} %{buildroot}/%{_datadir}/%{name}
 rm -rf %{buildroot}/%{_usr}/jre
 
 rm -rf %{buildroot}%{_usr}/InstallUtils.pm
 mv %{buildroot}%{_usr}/EULA.txt %{buildroot}%{_docdir}/%{name}-devel/
+mv %{buildroot}%{_usr}/CUDA_Toolkit_Release_Notes.txt %{buildroot}%{_docdir}/%{name}-devel/
 
 for S in 16 24 32 48 64 128 192 256; do
  install -d -m755 %{buildroot}%{_iconsdir}/hicolor/$S\x$S/apps
@@ -172,7 +175,7 @@ install -m644 %{SOURCE11} %{buildroot}%{_datadir}/applications/
 %{_libdir}/*.so
 %{_libdir}/*.a
 %{_includedir}/*
-%{_usr}/open64/*
+%_libdir/stubs/*
 %{_usr}/nvvm/*
 %{_datadir}/%{name}/*
 
