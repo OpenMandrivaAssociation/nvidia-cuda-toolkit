@@ -22,7 +22,7 @@ Source11:	nsight.desktop
 Source100:	nvidia-cuda-toolkit.rpmlintrc
 License:	Freeware
 Group:		System/Libraries
-Url:		http://www.nvidia.com/cuda/
+Url:		https://www.nvidia.com/cuda/
 Suggests:	nvidia >= %{driver_ver}
 ExclusiveArch:	x86_64
 
